@@ -9,24 +9,28 @@ from graphics.frame import Frame
 
 # Setup NeoPixel matrix (24×8 = 192 pixels), connected to GP18
 pixel_pin = machine.Pin(18, machine.Pin.OUT)
-num_pixels = 24 * 8
+num_pixels = 24 * 16
 pixels = neopixel.NeoPixel(pixel_pin, num_pixels)
 
 # Callbacks for the Leds system
 def show():
     pixels.write()
 
-def set_pixel(i, r, g, b):
-    pixels[i] = (int(r*255), int(g*266), int(b*255))
+def set_pixel(p, r, g, b):
+    pixels[p]=(int(r*255),int(g*255),int(b*255))
+
+from graphics.coord_map import CoordMap
+
+map = CoordMap()
 
 # Create the Frame with callbacks
-frame = Frame(width=24, height=8, show_fn=show, set_pixel_fn=set_pixel)
+frame = Frame(width=map.width, height=map.height, show_fn=show, set_pixel_fn=set_pixel,coord_map_fn=map.get_offset)
 
 # Create and configure a sprite
 for i in range (30):
     sprite = Sprite(frame)
-    sprite.x = random.randint(0, 23)
-    sprite.y = random.randint(0, 7)
+    sprite.x = random.randint(0, map.width)
+    sprite.y = random.randint(0, map.height)
     sprite.setColour(Colour(random.uniform(0,1),random.uniform(0,1),random.uniform(0,1)))
     sprite.brightness = 1.0
     sprite.opacity = 1.0
@@ -40,4 +44,4 @@ while True:
     frame.update()
     frame.render()
     frame.display()
-    time.sleep(1 / 30)
+#    time.sleep(1 / 30)

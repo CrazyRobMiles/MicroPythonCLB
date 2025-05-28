@@ -3,10 +3,10 @@ from graphics.sprite import Sprite
 from graphics.led import Leds
 
 class Frame:
-    def __init__(self, width, height, show_fn, set_pixel_fn):
+    def __init__(self, width, height, show_fn, set_pixel_fn,coord_map_fn):
         self.width = width
         self.height = height
-        self.leds = Leds(width, height, show_fn, set_pixel_fn)
+        self.leds = Leds(width, height, show_fn, set_pixel_fn,coord_map_fn)
         self.sprites = []
 
     def clear(self):

@@ -3,11 +3,10 @@ import machine
 import neopixel
 import time
 import math
-import random
-from graphics.colours import Colour,find_random_colour,colour_name_lookup
-from graphics.sprite import Sprite
-from graphics.frame import Frame
-from graphics.coord_map import CoordMap
+import graphics.colours
+import graphics.sprite
+import graphics.frame
+
 
 class Manager(CLBManager):
     version = "1.0.0"
@@ -21,10 +20,8 @@ class Manager(CLBManager):
     def __init__(self):
         super().__init__(defaults={
             "pixelpin": 18,
-            "panel_width": 8,
-            "panel_height": 8,
-            "x_panels": 3,
-            "y_panels": 2,
+            "numpixels_x": 12,
+            "numpixels_y": 1,
             "brightness": 1.0,
             "pixeltype": "GRB"
         })
@@ -35,9 +32,7 @@ class Manager(CLBManager):
         self.anim_step = 0
 
     def setup(self, settings):
-
         super().setup(settings)
-
         if not self.enabled:
             self.state = self.STATE_DISABLED
             return
@@ -45,46 +40,22 @@ class Manager(CLBManager):
         try:
             pin_number = settings["pixelpin"]
             pin = machine.Pin(pin_number, machine.Pin.OUT)
-
-            self.map = CoordMap(
-                panel_width=self.settings["panel_width"],
-                panel_height=self.settings["panel_height"],
-                x_panels=self.settings["x_panels"],
-                y_panels=self.settings["y_panels"])
-
-            if self.map.pixels == 0:
+            self.pixel_count = self.settings["numpixels_x"] * self.settings["numpixels_y"]
+            if self.pixel_count == 0:
                 self.state = self.STATE_DISABLED
                 self.set_status(4000, "No pixels configured")
                 return
 
-            self.pixels = neopixel.NeoPixel(pin, self.map.pixels)
+            self.pixels = neopixel.NeoPixel(pin, self.pixel_count)
 
-            self.frame = Frame(width=self.map.width, height=self.map.height, show_fn=self.show, set_pixel_fn=self.set_pixel,coord_map_fn=self.map.get_offset)
 
-            for i in range (30):
-                sprite = Sprite(self.frame)
-                sprite.x = random.randint(0, self.map.width)
-                sprite.y = random.randint(0, self.map.height)
-                sprite.setColour(Colour(random.uniform(0,1),random.uniform(0,1),random.uniform(0,1)))
-                sprite.brightness = 1.0
-                sprite.opacity = 1.0
-                sprite.enabled = True
-                sprite.startWrap(random.uniform(-0.2,0.2), random.uniform(-0.2,0.2))
-                self.frame.add_sprite(sprite)
-
+            self.clear_pixels()
             self.state = self.STATE_RUNNING
-            self.set_status(4001, f"Pixel strip started with {self.map.pixels} pixels")
+            self.set_status(4001, f"Pixel strip started with {self.pixel_count} pixels")
 
         except Exception as e:
             self.state = self.STATE_ERROR
             self.set_status(4002, f"Pixel init error: {e}")
-
-    # Callbacks for the Leds system
-    def show(self):
-        self.pixels.write()
-
-    def set_pixel(self,p, r, g, b):
-        self.pixels[p]=(int(r*255),int(g*255),int(b*255))
 
     def update(self):
         if self.state != self.STATE_RUNNING:
@@ -92,9 +63,13 @@ class Manager(CLBManager):
 
         now = time.ticks_ms()
         if time.ticks_diff(now, self.last_update) > 33:
-            self.frame.update()
-            self.frame.render()
-            self.frame.display()
+            for i in range(self.pixel_count):
+                r = int((math.sin(i + self.anim_step) + 1) * 127)
+                g = int((math.sin(i + self.anim_step + 2) + 1) * 127)
+                b = int((math.sin(i + self.anim_step + 4) + 1) * 127)
+                self.pixels[i] = (10, 10, 10)
+            self.pixels.write()
+            self.anim_step += 2
             self.last_update = now
         else:
             print("+")
@@ -120,3 +95,4 @@ class Manager(CLBManager):
         self.enabled = False
         self.set_status(4011, "Pixels manually disabled")
         self.state = self.STATE_DISABLED
+        self.clear_pixels()

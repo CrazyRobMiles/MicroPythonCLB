@@ -1,5 +1,6 @@
 from graphics.colours import Colour, BLACK
 
+
 class Led:
     def __init__(self):
         self.colour = BLACK.copy()
@@ -14,13 +15,14 @@ class Led:
         self.colour.b = min(255, self.colour.b)
 
 class Leds:
-    def __init__(self, width, height, show_fn, set_pixel_fn):
+    def __init__(self, width, height, show_fn, set_pixel_fn,coord_map_fn):
         self.width = width
         self.height = height
         self.norm_width = 1.0
         self.norm_height = height / width
         self.show = show_fn
         self.set_pixel = set_pixel_fn
+        self.xy_to_index = coord_map_fn
         self.leds = [[Led() for _ in range(height)] for _ in range(width)]
 
     def clear(self, colour=BLACK):
@@ -35,13 +37,6 @@ class Leds:
                 if c.r == 0 and c.g == 0 and c.b == 0:
                     self.leds[x][y].colour = colour.copy()
 
-    def xy_to_index(self,x, y):
-        # Assumes panels are laid out left-to-right
-        panel_index = x // 8
-        local_x = x % 8
-        index = panel_index * 64 + (y * 8) + local_x
-        return index
-    
     def display(self, brightness=1.0):
         i = 0
         for y in range(self.height):
@@ -62,6 +57,11 @@ class Leds:
     def render_light(self, source_x, source_y, colour, brightness, opacity):
         int_x = int(source_x)
         int_y = int(source_y)
+        r = colour.r * brightness
+        g = colour.g * brightness
+        b = colour.b * brightness
+        self.leds[int_x][int_y].add_colour_values(r, g, b, opacity)
+        return
 
         for dx in [-1, 0, 1]:
             px = (int_x + dx) % self.width

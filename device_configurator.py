@@ -70,7 +70,7 @@ class DeviceConfigurator:
                 json_bytes = self._xor_data(obfuscated, seed)
                 loaded = json.loads(json_bytes.decode("utf-8"))
             else:
-                print("This is the data", data)
+                print("Loaded data:", data)
                 loaded = json.loads(data)
 
             # Assume: self.settings = full default settings
