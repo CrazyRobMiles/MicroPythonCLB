@@ -1,4 +1,4 @@
-from graphics.colours import Colour, BLACK
+from graphics.colours import ColourFadeManager
 from graphics.sprite import Sprite
 from graphics.led import Leds
 
@@ -7,15 +7,17 @@ class Frame:
         self.width = width
         self.height = height
         self.leds = Leds(width, height, show_fn, set_pixel_fn,coord_map_fn)
+        self.background_manager = ColourFadeManager()
         self.sprites = []
 
     def clear(self):
-        self.leds.clear(BLACK)
+        self.leds.clear(self.background_manager.col)
 
     def add_sprite(self, sprite):
         self.sprites.append(sprite)
 
     def update(self):
+        self.background_manager.update()
         for sprite in self.sprites:
             sprite.update()
 

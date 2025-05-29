@@ -32,6 +32,7 @@ class CLB:
                     manager_name = module_name[:-8]  # strip '_manager'
                     entries.append((manager_name, manager_instance))
                 except Exception as e:
+                    sys.print_exception(e)
                     print(f"Failed to load {module_name}: {e}")
         return entries
 

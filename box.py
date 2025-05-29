@@ -1,5 +1,5 @@
 from device_configurator import DeviceConfigurator
-
+import sys
 from clb import CLB
 
 clb = CLB()
@@ -12,7 +12,7 @@ config = DeviceConfigurator(
     on_settings_received=lambda s: print("Settings received from serial connection"),
     on_get_request_received=lambda : print("Get request received from serial connection")
 )
-
+ 
 # Force online if required for initial setup
 #result = config.setup(force_online=True)
 result = config.setup()
@@ -29,9 +29,5 @@ try:
         clb.update_console()
 except Exception as e:
     print(e)
+    sys.print_exception(e)
     clb.teardown()
-
-
-
-
-

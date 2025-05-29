@@ -4,7 +4,8 @@ import neopixel
 import time
 import math
 import random
-from graphics.colours import Colour,find_random_colour,colour_name_lookup
+import sys
+from graphics.colours import find_random_colour,colour_name_lookup
 from graphics.sprite import Sprite
 from graphics.frame import Frame
 from graphics.coord_map import CoordMap
@@ -61,11 +62,13 @@ class Manager(CLBManager):
 
             self.frame = Frame(width=self.map.width, height=self.map.height, show_fn=self.show, set_pixel_fn=self.set_pixel,coord_map_fn=self.map.get_offset)
 
+            self.frame.background_manager.start_transitions(((20,0,0),(0,20,0),(0,0,20)),100)
+
             for i in range (30):
                 sprite = Sprite(self.frame)
                 sprite.x = random.randint(0, self.map.width)
                 sprite.y = random.randint(0, self.map.height)
-                sprite.setColour(Colour(random.uniform(0,1),random.uniform(0,1),random.uniform(0,1)))
+                sprite.setColour((random.randint(0,255),random.randint(0,255),random.randint(0,255)))
                 sprite.brightness = 1.0
                 sprite.opacity = 1.0
                 sprite.enabled = True
@@ -77,16 +80,18 @@ class Manager(CLBManager):
 
         except Exception as e:
             self.state = self.STATE_ERROR
+            sys.print_exception(e)
             self.set_status(4002, f"Pixel init error: {e}")
 
     # Callbacks for the Leds system
     def show(self):
         self.pixels.write()
 
-    def set_pixel(self,p, r, g, b):
-        self.pixels[p]=(int(r*255),int(g*255),int(b*255))
+    def set_pixel(self,p, col):
+        self.pixels[p]=col
 
     def update(self):
+        
         if self.state != self.STATE_RUNNING:
             return
 

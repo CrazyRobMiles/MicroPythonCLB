@@ -1,105 +1,134 @@
-import random
+RED=0
+GREEN=1
+BLUE=2
 
-class Colour:
-    def __init__(self, r=0.0, g=0.0, b=0.0):
-        self.r = r
-        self.g = g
-        self.b = b
+BLACK=(0,0,0)
 
-    def copy(self):
-        return Colour(self.r, self.g, self.b)
-
-    def __repr__(self):
-        return f"Colour({self.r:.2f}, {self.g:.2f}, {self.b:.2f})"
-
-# Short form named colours
 colour_char_lookup = {
-    'K': Colour(0, 0, 0),
-    'R': Colour(1, 0, 0),
-    'G': Colour(0, 1, 0),
-    'B': Colour(0, 0, 1),
-    'Y': Colour(1, 1, 0),
-    'O': Colour(1, 165/255, 0),
-    'M': Colour(1, 0, 1),
-    'C': Colour(0, 1, 1),
-    'W': Colour(1, 1, 1),
-    'A': Colour(0, 138/255, 216/255),
-    'V': Colour(143/255, 0, 1),
-    'P': Colour(128/255, 0, 128/255),
-    'T': Colour(0, 128/255, 128/255)
+    'K': BLACK,
+    'R': (255, 0, 0),
+    'G': (0, 255, 0),
+    'B': (0, 0, 255),
+    'Y': (255, 255, 0),
+    'O': (255, 165, 0),
+    'M': (255, 0, 255),
+    'C': (0, 255, 255),
+    'W': (255, 255, 255),
+    'A': (0, 138, 216),
+    'V': (143, 0, 255),
+    'P': (128, 0, 128),
+    'T': (0, 128, 128)
 }
 
 # Named colours (subset for brevity)
-colour_name_lookup = [
-    ("black", Colour(0, 0, 0)),
-    ("red", Colour(1, 0, 0)),
-    ("green", Colour(0, 1, 0)),
-    ("blue", Colour(0, 0, 1)),
-    ("yellow", Colour(1, 1, 0)),
-    ("orange", Colour(1, 165/255, 0)),
-    ("magenta", Colour(1, 0, 1)),
-    ("cyan", Colour(0, 1, 1)),
-    ("white", Colour(1, 1, 1)),
-    ("azure", Colour(0, 138/255, 216/255)),
-    ("blueviolet", Colour(138/255, 43/255, 226/255)),
-    ("brown", Colour(165/255, 42/255, 42/255)),
-    ("chartreuse", Colour(127/255, 255/255, 0)),
-    ("darkgreen", Colour(0, 100/255, 0)),
-    ("darkmagenta", Colour(139/255, 0, 139/255)),
-    ("darkorange", Colour(255/255, 140/255, 0)),
-    ("darkred", Colour(139/255, 0, 0)),
-    ("darkturquoise", Colour(0, 206/255, 209/255)),
-    ("darkviolet", Colour(148/255, 0, 211/255)),
-    ("deeppink", Colour(255/255, 20/255, 147/255)),
-    ("deepskyblue", Colour(0, 191/255, 255/255)),
-    ("firebrick", Colour(178/255, 34/255, 34/255)),
-    ("forestgreen", Colour(34/255, 139/255, 34/255)),
-    ("gold", Colour(255/255, 215/255, 0)),
-    ("indianred", Colour(205/255, 92/255, 92/255)),
-    ("lawngreen", Colour(124/255, 252/255, 0)),
-    ("lightseagreen", Colour(32/255, 178/255, 170/255)),
-    ("limegreen", Colour(50/255, 205/255, 50/255)),
-    ("maroon", Colour(128/255, 0, 0)),
-    ("mediumblue", Colour(0, 0, 205/255)),
-    ("mediumspringgreen", Colour(0, 250/255, 154/255)),
-    ("mediumviolet", Colour(199/255, 21/255, 133/255)),
-    ("midnightblue", Colour(25/255, 25/255, 112/255)),
-    ("navy", Colour(0, 0, 128/255)),
-    ("orchid", Colour(218/255, 112/255, 214/255)),
-    ("purple", Colour(128/255, 0, 128/255)),
-    ("saddlebrown", Colour(139/255, 69/255, 19/255)),
-    ("salmon", Colour(250/255, 128/255, 114/255)),
-    ("seagreen", Colour(46/255, 139/255, 87/255)),
-    ("springgreen", Colour(0, 1, 127/255)),
-    ("teal", Colour(0, 128/255, 128/255)),
-    ("tomato", Colour(255/255, 99/255, 71/255)),
-    ("violet", Colour(143/255, 0, 1))
-]
-
+colour_name_lookup = {
+    "black": (0, 0, 0),
+    "red": (255, 0, 0),
+    "green": (0, 255, 0),
+    "blue": (0, 0, 255),
+    "yellow": (255, 255, 0),
+    "orange": (255, 165, 0),
+    "magenta": (255, 0, 255),
+    "cyan": (0, 255, 255),
+    "white": (255, 255, 255),
+    "azure": (0, 138, 216),
+    "blueviolet": (138, 43, 226),
+    "brown": (165, 42, 42),
+    "chartreuse": (127, 255, 0),
+    "darkgreen": (0, 100, 0),
+    "darkmagenta": (139, 0, 139),
+    "darkorange": (255, 140, 0),
+    "darkred": (139, 0, 0),
+    "darkturquoise": (0, 206, 209),
+    "darkviolet": (148, 0, 211),
+    "deeppink": (255, 20, 147),
+    "deepskyblue": (0, 191, 255),
+    "firebrick": (178, 34, 34),
+    "forestgreen": (34, 139, 34),
+    "gold": (255, 215, 0),
+    "indianred": (205, 92, 92),
+    "lawngreen": (124, 252, 0),
+    "lightseagreen": (32, 178, 170),
+    "limegreen": (50, 205, 50),
+    "maroon": (128, 0, 0),
+    "mediumblue": (0, 0, 205),
+    "mediumspringgreen": (0, 250, 154),
+    "mediumviolet": (199, 21, 133),
+    "midnightblue": (25, 25, 112),
+    "navy": (0, 0, 128),
+    "orchid": (218, 112, 214),
+    "purple": (128, 0, 128),
+    "saddlebrown": (139, 69, 19),
+    "salmon": (250, 128, 114),
+    "seagreen": (46, 139, 87),
+    "springgreen": (0, 1, 127),
+    "teal": (0, 128, 128),
+    "tomato": (255, 99, 71),
+    "violet": (143, 0, 1)
+}
 
 # Lookups
-
 def find_colour_by_name(name):
-    for n, c in colour_name_lookup:
-        if name.lower() == n:
-            return c.copy()
-    return None
+    return colour_name_lookup.get(name.lower(), None)
 
 def find_colour_by_char(ch):
     return colour_char_lookup.get(ch.upper(), None)
 
 def find_random_colour():
-    return random.choice(colour_name_lookup[1:])[1].copy()  # skip black
+    return random.choice(list(colour_name_lookup.values()))
 
-def get_colour_inbetween_mask(low_char, high_char, distance):
-    from_col = find_colour_by_char(low_char)
-    to_col = find_colour_by_char(high_char)
-    if not from_col or not to_col:
-        return Colour(0, 0, 0)
-    red = from_col.r + (to_col.r - from_col.r) * distance
-    green = from_col.g + (to_col.g - from_col.g) * distance
-    blue = from_col.b + (to_col.b - from_col.b) * distance
-    return Colour(red, green, blue)
+class ColourFadeManager():
+    def __init__(self):
+        self.col = [0,0,0]
+        self.set_col(BLACK)
+        self.deltas = [0,0,0]
+        self.colours=None
 
-BLACK = Colour(0, 0, 0)
+    def stop_update(self):
+        self.current_step=0
+        self.no_of_steps=0
+        self.colours=[]
+        self.colour_number=0
 
+    def set_col(self,new_col):
+        self.stop_update()
+        for i in range(0,3):
+            self.col[i]=new_col[i]
+
+    def update(self):
+
+        if self.no_of_steps==0:
+            return
+
+        if self.current_step < self.no_of_steps:
+            for i in range(0,3):
+                c = self.col[i] + self.deltas[i]
+                if c<0:
+                    c=0
+                if c>255:
+                    c=255
+                self.col[i]=c
+            self.current_step = self.current_step + 1
+            return self.col
+        else:
+            if self.colours==None:
+                return
+            self.colour_number=self.colour_number+1
+            if self.colour_number>= len(self.colours):
+                self.colour_number=0
+            self.start_fade(self.colours[self.colour_number], self.no_of_steps)
+
+    def start_fade(self,target_col,no_of_steps):
+        self.current_step = 0
+        self.no_of_steps = no_of_steps
+        if no_of_steps == 0:
+            self.set_col(target_col)
+        else:
+            for i in range(0,3):
+                self.deltas[i] = (target_col[i] - self.col[i]) / no_of_steps
+
+    def start_transitions(self,colours,no_of_steps):
+        self.colours=colours
+        self.no_of_steps=no_of_steps
+        self.colour_number=0
+        self.start_fade(colours[0],no_of_steps)

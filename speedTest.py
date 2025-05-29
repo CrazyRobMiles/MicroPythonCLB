@@ -28,7 +28,7 @@ def random_frame():
         r=random.randint(0, 255)
         g=random.randint(0, 255)        
         b=random.randint(0, 255)
-        pixels[i] = (r, g, b)
+        pixels[i] = (0, 0, 0)
 
 # Benchmark
 frames = 100

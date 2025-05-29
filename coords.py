@@ -3,7 +3,7 @@ import machine
 import neopixel
 import random
 
-from graphics.colours import Colour,find_random_colour,colour_name_lookup
+from graphics.colours import find_random_colour,colour_name_lookup
 from graphics.sprite import Sprite
 from graphics.frame import Frame
 
@@ -27,7 +27,7 @@ frame = Frame(width=WIDTH, height=HEIGHT, show_fn=show, set_pixel_fn=set_pixel)
 sprite = Sprite(frame)
 sprite.x = 2
 sprite.y = 2
-sprite.setColour(Colour(20,0,0))
+sprite.setColour((20,0,0))
 sprite.brightness = 1.0
 sprite.opacity = 1.0
 sprite.enabled = True

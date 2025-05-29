@@ -1,4 +1,4 @@
-from graphics.colours import Colour, BLACK
+from graphics.colours import BLACK
 import math
 
 CLOSE_TOLERANCE = 0.0001
@@ -16,7 +16,7 @@ class Sprite:
     def reset(self):
         self.enabled = False
         self.movingState = Sprite.SPRITE_STOPPED
-        self.colour = BLACK.copy()
+        self.colour = BLACK
         self.moveSteps = 0
         self.colourSteps = 0
         self.brightnessSteps = 0
