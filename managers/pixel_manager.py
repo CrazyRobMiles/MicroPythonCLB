@@ -9,6 +9,7 @@ from graphics.colours import find_random_colour,colour_name_lookup
 from graphics.sprite import Sprite
 from graphics.frame import Frame
 from graphics.coord_map import CoordMap
+from graphics.animations import anim_wandering_sprites
 
 class Manager(CLBManager):
     version = "1.0.0"
@@ -60,22 +61,12 @@ class Manager(CLBManager):
 
             self.pixels = neopixel.NeoPixel(pin, self.map.pixels)
 
-            self.frame = Frame(width=self.map.width, height=self.map.height, show_fn=self.show, set_pixel_fn=self.set_pixel,coord_map_fn=self.map.get_offset)
+            self.frame = Frame(width=self.map.width, height=self.map.height, brightness=0.1, show_fn=self.show, set_pixel_fn=self.set_pixel,coord_map_fn=self.map.get_offset)
 
-            self.frame.background_manager.start_transitions(((20,0,0),(0,20,0),(0,0,20)),100)
-
-            for i in range (30):
-                sprite = Sprite(self.frame)
-                sprite.x = random.randint(0, self.map.width)
-                sprite.y = random.randint(0, self.map.height)
-                sprite.setColour((random.randint(0,255),random.randint(0,255),random.randint(0,255)))
-                sprite.brightness = 1.0
-                sprite.opacity = 1.0
-                sprite.enabled = True
-                sprite.startWrap(random.uniform(-0.2,0.2), random.uniform(-0.2,0.2))
-                self.frame.add_sprite(sprite)
+            anim_wandering_sprites(self.frame)
 
             self.state = self.STATE_RUNNING
+
             self.set_status(4001, f"Pixel strip started with {self.map.pixels} pixels")
 
         except Exception as e:
